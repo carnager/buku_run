@@ -12,11 +12,14 @@ edit="Alt+e"
 # colors
 help_color="#334433"
 
+# source local config:
+source $HOME/.config/buku_run/config
+
 main () {
     HELP="Welcome to Buku. Use <span color='${help_color}'>Alt+n</span> to add a new Bookmark
 Use <span color='${help_color}'>Alt+Tab</span> to switch Bookmarks/Tags view"
     if [[ $mode == "bookmarks" ]]; then
-        content=$(buku -p -f 2 | awk 'NF == 2 { $0 = $0 "\tNOTAG" } { print }' | awk 'BEGIN { FS=OFS="\t" } { $1 = substr($1,0,80); print $1"\t"$2 }' | column -t)
+        content=$(buku -p -f 2 | awk 'NF == 2 { $0 = $0 "\tNOTAG" } { print }' | awk 'BEGIN { FS=OFS="   " } { $1 = substr($1,0,80); print $1"\t"$2 $3 }' | column -t)
 #        content=$(buku -p -f 2 | awk 'NF == 2 { $0 = $0 "\tNOTAG" } { print }')
         menu=$(echo "${content}" | _rofi -p '> ' -filter "${filter}" -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${edit}")
     elif [[ $mode == "tags" ]]; then
@@ -106,8 +109,7 @@ editTags () {
     if [[ $val -eq 1 ]]; then
         exit
     elif [[ $val -eq 0 ]]; then
-        finaltag=$(echo ${edittagsmenu} | sed 's/,/, /g')
-        buku -u ${id} --tag ${finaltag}
+        buku -u ${id} ${edittagsmenu}
     fi
     mode=bookmarks main
 }
@@ -143,7 +145,7 @@ addTags () {
     if [[ $val -eq 1 ]]; then
         exit
     elif [[ $val -eq 0 ]]; then
-        buku -a "${inserturl}" ${inserttags}
+        buku -a ${inserturl} ${inserttags}
     fi
 }
 mode=bookmarks main
