@@ -7,7 +7,7 @@ _rofi () {
 # keybindings
 switch_view="Alt+Tab"
 new_bookmark="Alt+n"
-edit="Alt+e"
+actions="Alt+a"
 
 # colors
 help_color="#2d7ed8"
