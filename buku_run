@@ -146,12 +146,18 @@ addMark () {
 }
 
 addTags () {
-    inserttags=$(echo | _rofi -p '> ' -mesg "Add some tags. Separate tags with ', '")
+    inserttags=$(buku --st | awk '{ print $2 }' | _rofi -p '> ' -mesg "Add some tags. Separate tags with ', '")
     val=$?
     if [[ $val -eq 1 ]]; then
         exit
     elif [[ $val -eq 0 ]]; then
-        buku -a ${inserturl} ${inserttags}
+        taglist=$(echo "${inserttags}" | tr '\n' ',')
+        tags=()
+        for tag in $taglist; do
+            tags+=("$tag")
+        done
+        tags=${tags%?}
+        buku -a ${inserturl} ${tags}
     fi
 }
 mode=bookmarks main
