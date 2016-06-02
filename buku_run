@@ -115,7 +115,7 @@ editTags () {
     if [[ $val -eq 1 ]]; then
         exit
     elif [[ $val -eq 0 ]]; then
-        buku -u ${id} ${edittagsmenu}
+        buku -u ${id} --tag ${edittagsmenu}
     fi
     mode=bookmarks main
 }
