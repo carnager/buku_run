@@ -89,9 +89,9 @@ deleteMenu () {
 }
 
 editMenu () {
-    bookmark=$(echo "${menu}" | awk -F '\t' '{ print $3 }')
+    bookmark=$(echo "${menu}" | awk -F '\t' '{ print $2 }')
     id=$(echo "${menu}" | awk -F '\t' '{ print $1 }')
-    tags=$(echo "${menu}" | awk -F "\t" '{ print $2 }')
+    tags=$(echo "${menu}" | awk -F "\t" '{ print $3 }')
     content=$(echo -e "url:  $bookmark\ntags: $tags")
     editmenu=$(echo -e "< Return\n---\n${content}" | _rofi -p '> ')
     val=$?
