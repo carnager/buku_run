@@ -53,7 +53,7 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
 
 optionsMenu () {
     if [[ $mode == "bookmarks" ]]; then
-        askmenu=$(echo -e "< Return\n---\n1. Open\n2. Edit\n3. Delete" | _rofi -p '> ' -mesg "Choose Action for bookmark")
+        askmenu=$(echo -e "< Return\n---\n1. Edit\n2. Delete" | _rofi -p '> ' -mesg "Choose Action for bookmark")
         val=$?
         if [[ $val -eq 1 ]]; then
             exit
@@ -61,11 +61,9 @@ optionsMenu () {
             if [[ $askmenu == "< Return" ]]; then
                 export mode=bookmarks
                 main
-            elif [[ $askmenu == "1. Open" ]]; then
-                buku -o $(echo "${menu}" | awk -F '\t' '{ print $1 }')
-            elif [[ $askmenu == "2. Edit" ]]; then
+            elif [[ $askmenu == "1. Edit" ]]; then
                 editMenu
-            elif [[ $askmenu == "3. Delete" ]]; then
+            elif [[ $askmenu == "2. Delete" ]]; then
                 deleteMenu
             fi
         fi
