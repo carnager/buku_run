@@ -41,7 +41,11 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
             mode=bookmarks main
         fi
     elif [[ $val -eq 0 ]]; then
-        buku -o $(echo "${menu}" | awk ' { print $1 }')
+        if [[ $mode == "bookmarks" ]]; then
+            buku -o $(echo "${menu}" | awk ' { print $1 }')
+        elif [[ $mode == "tags" ]]; then
+            filter="${menu}" mode="bookmarks" main
+        fi
     fi
 }
 
