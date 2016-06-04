@@ -22,7 +22,7 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
         content=$(buku -p -f 2 | awk 'NF == 2 { $0 = $0 "NOTAG" }; { $2 = substr($2,0,80); print $1"\t"$2"\t"$3 }' | column -t -s $'\t' -o $'\t')
         menu=$(echo "${content}" | _rofi -p '> ' -filter "${filter}" -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
     elif [[ $mode == "tags" ]]; then
-        menu=$(buku --st | awk '{ print substr($0, index($0,$2)) }' | _rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}")
+        menu=$(buku --st | awk '{ print substr($0, index($0,$2)) }' | _rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
     fi
     val=$?
     if [[ $val -eq 1 ]]; then
@@ -68,8 +68,42 @@ optionsMenu () {
             fi
         fi
     elif [[ $mode == "tags" ]]; then
-        export mode="bookmarks"
-        filter="${menu}" mode="bookmarks" main
+        askmenu=$(echo -e "< Return\n---\n1. Replace Tag\n2. Delete Tag" | _rofi -p '> ' -mesg "Choose Action for tag \"${menu}\"")
+        val=$?
+        if [[ $val -eq 1 ]]; then
+            exit
+        elif [[ $val -eq 0 ]]; then
+            if [[ $askmenu == "< Return" ]]; then
+                export mode=tags
+                main
+            elif [[ $askmenu == "1. Replace Tag" ]]; then
+                newtag=$(echo | _rofi -p '> ' -mesg "Enter new tag name for tag \"${menu}\"")
+                val=$?
+                if [[ $val -eq 1 ]]; then
+                    exit
+                elif [[ $val -eq 0 ]]; then
+                    if [[ $newtag == "" ]]; then
+                        mode=tags main
+                    else
+                        buku -r "${menu}" "${newtag}"
+                        mode=tags main
+                    fi
+                fi
+            elif [[ $askmenu == "2. Delete Tag" ]]; then
+                delask=$(echo -e "1. Yes\n2. No" | _rofi -p '> ' -mesg "Really delete tag?")
+                val=$?
+                if [[ $val -eq 1 ]]; then
+                    exit
+                elif [[ $val -eq 0 ]]; then
+                    if [[ $delask == "1. Yes" ]]; then
+                        buku -r "${menu}"
+                        mode=tags main
+                    elif [[ $delask == "2. No" ]]; then
+                        mode=tags main
+                    fi
+                fi
+            fi
+        fi
     fi
 }
 
