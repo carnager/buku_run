@@ -190,7 +190,7 @@ addTags () {
     if [[ $val -eq 1 ]]; then
         exit
     elif [[ $val -eq 0 ]]; then
-        if [[ $(echo ${insertags} | wc -l) -gt 1 ]]; then
+        if [[ $(echo "${inserttags}" | wc -l) -gt 1 ]]; then
             taglist=$(echo "${inserttags}" | tr '\n' ',')
             tags=()
             for tag in $taglist; do
