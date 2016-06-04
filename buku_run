@@ -12,6 +12,9 @@ actions="Alt+a"
 # colors
 help_color="#334433"
 
+# source global config
+source /etc/buku.config
+
 # source local config:
 source $HOME/.config/buku_run/config
 
@@ -187,12 +190,15 @@ addTags () {
     if [[ $val -eq 1 ]]; then
         exit
     elif [[ $val -eq 0 ]]; then
-        taglist=$(echo "${inserttags}" | tr '\n' ',')
-        tags=()
-        for tag in $taglist; do
-            tags+=("$tag")
-        done
-        tags=${tags%?}
+        if [[ $(echo ${insertags} | wc -l) -gt 1 ]]; then
+            taglist=$(echo "${inserttags}" | tr '\n' ',')
+            tags=()
+            for tag in $taglist; do
+                tags+=("$tag")
+            done
+        else
+            tags=${inserttags%?}
+        fi
         if [[ $1 == "--update" ]]; then
             buku -u "${id}" --tag ${tags}
         else
