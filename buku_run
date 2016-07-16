@@ -197,7 +197,7 @@ addTags () {
                 tags+=("$tag")
             done
         else
-            tags=${inserttags%?}
+            tags=${inserttags}
         fi
         if [[ $1 == "--update" ]]; then
             buku -u "${id}" --tag ${tags}
