@@ -15,3 +15,5 @@ rofi frontend for buku bookmarks manager
 * gawk
 * sed
 * [buku](https://github.com/jarun/buku)
+* rofi (https://github.com/DaveDavenport/rofi)
+* bash
