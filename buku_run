@@ -22,7 +22,7 @@ main () {
     HELP="Welcome to Buku. Use <span color='${help_color}'>${new_bookmark}</span> to add a new Bookmark
 Use <span color='${help_color}'>${switch_view}</span> to switch View. <span color='${help_color}'>${actions}</span> for actions"
     if [[ $mode == "bookmarks" ]]; then
-        content=$(buku -p -f 2 | awk 'NF == 2 { $0 = $0 "NOTAG" }; { $2 = substr($2,0,80); print $1"\t"$2"\t"$3 }' | column -t -s $'\t' -o $'\t')
+        content=$(buku -p -f 2 | awk 'NF == 2 { $0 = $0 "NOTAG" }; { $2 = substr($2,0,80); print $1"\t"$2"\t"$3 }' | column -t -s $'\t')
         menu=$(echo "${content}" | _rofi -p '> ' -filter "${filter}" -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
     elif [[ $mode == "tags" ]]; then
         menu=$(buku --st | awk '{ print substr($0, index($0,$2)) }' | _rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
@@ -44,7 +44,7 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
         fi
     elif [[ $val -eq 0 ]]; then
         if [[ $mode == "bookmarks" ]]; then
-            id=$(echo "${menu}" | awk -F '\t' '{ print $1 }')
+            id=$(echo "${menu}" | awk -F ' ' '{ print $1 }')
             for bm in ${id}; do
                 buku -o "${bm}"
             done
