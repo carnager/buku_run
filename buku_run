@@ -13,10 +13,29 @@ actions="Alt+a"
 help_color="#334433"
 
 # source global config
-source /etc/buku.config
+if [[ -f /etc/buku_run.config ]]
+then
+  source /etc/buku_run.config
+fi
 
 # source local config:
-source $HOME/.config/buku_run/config
+if [[ -z $XDG_CONFIG_DIR ]]
+then
+  if [[ -f $HOME/.config/buku_run/config ]]
+  then
+    source $HOME/.config/buku_run/config
+  else
+    echo "User config file \'~/.config/buku_run/config\' not found. using global config"
+  fi
+else
+  if [[ -f "${XDG_CONFIG_DIR}/buku_run/config" ]]
+  then
+    source "${XDG_CONFIG_DIR}/buku_run/config"
+  else
+    echo "User config file \'~/.config/buku_run/config\' not found. using global config"
+  fi
+fi
+
 
 main () {
     HELP="Welcome to Buku. Use <span color='${help_color}'>${new_bookmark}</span> to add a new Bookmark
