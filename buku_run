@@ -130,7 +130,7 @@ optionsMenu () {
 }
 
 deleteMenu () {
-    id=$(echo "${menu}" | awk -F '\t' '{ print $1 }')
+    id=$(echo "${menu}" | awk '{ print $1 }')
     delask=$(echo -e "1. Yes\n2. No" | _rofi -p '> ' -mesg "Really delete bookmark?")
     val=$?
     if [[ $val -eq 1 ]]; then
@@ -146,9 +146,9 @@ deleteMenu () {
 }
 
 editMenu () {
-    bookmark=$(echo "${menu}" | awk -F '\t' '{ print $2 }')
-    id=$(echo "${menu}" | awk -F '\t' '{ print $1 }')
-    tags=$(echo "${menu}" | awk -F "\t" '{ print $3 }')
+    bookmark=$(echo "${menu}" | awk '{ print $2 }')
+    id=$(echo "${menu}" | awk '{ print $1 }')
+    tags=$(echo "${menu}" | awk '{ print $3 }')
     content=$(echo -e "url:  $bookmark\ntags: $tags")
     editmenu=$(echo -e "< Return\n---\n${content}" | _rofi -p '> ')
     val=$?
