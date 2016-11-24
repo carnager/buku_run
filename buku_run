@@ -159,9 +159,9 @@ editMenu () {
             main
         elif [[ $editmenu == "tags: NOTAG" ]]; then
             addTags --update
-        elif [[ $editmenu =~ "tags:*" ]]; then
+        elif [[ $editmenu =~ tags:* ]]; then
             tags="${tags}" editTags
-        elif [[ $editmenu =~ "url:*" ]]; then
+        elif [[ $editmenu =~ url:* ]]; then
             editBookmark
         fi
     fi
