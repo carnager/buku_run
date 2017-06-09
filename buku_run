@@ -148,7 +148,7 @@ deleteMenu () {
 editMenu () {
     bookmark=$(echo "${menu}" | awk '{ print $2 }')
     id=$(echo "${menu}" | awk '{ print $1 }')
-    tags=$(echo "${menu}" | awk '{ print substr($0, index($0,$3)) }')
+    tags=$(echo "${menu}" | awk '{ print substr($0, index($0,$3)) }' | sed 's/NOTAG//g')
     content=$(echo -e "url:  $bookmark\ntags: $tags")
     editmenu=$(echo -e "< Return\n---\n${content}" | _rofi -p '> ')
     val=$?
