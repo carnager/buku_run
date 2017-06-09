@@ -44,7 +44,7 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
         content=$(buku -p -f 2 | awk 'NF == 2 { $0 = $0 "NOTAG" }; { $2 = substr($2,0,80); print $1"\t"$2"\t"$3 }' | column -t -s $'\t')
         menu=$(echo "${content}" | _rofi -p '> ' -filter "${filter}" -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
     elif [[ $mode == "tags" ]]; then
-        menu=$(buku --st | awk '{ print substr($0, index($0,$2)) }' | _rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
+        menu=$(buku --st --np | awk '{ print $2 }' | _rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
     fi
     val=$?
     if [[ $val -eq 1 ]]; then
@@ -204,7 +204,7 @@ addMark () {
 }
 
 addTags () {
-    inserttags=$(buku --st | awk '{ print $2 }' | _rofi -p '> ' -mesg "Add some tags. Separate tags with ', '")
+    inserttags=$(buku --st --np | awk '{ print $2 }' | _rofi -p '> ' -mesg "Add some tags. Separate tags with ', '")
     val=$?
     if [[ $val -eq 1 ]]; then
         exit
