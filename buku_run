@@ -41,10 +41,11 @@ main () {
     HELP="Welcome to Buku. Use <span color='${help_color}'>${new_bookmark}</span> to add a new Bookmark
 Use <span color='${help_color}'>${switch_view}</span> to switch View. <span color='${help_color}'>${actions}</span> for actions"
     if [[ $mode == "bookmarks" ]]; then
-        content=$(buku -p -f 2 | awk 'NF == 2 { $0 = $0 "NOTAG" }; { $2 = substr($2,0,80); print $1"\t"$2"\t"$3 }' | column -t -s $'\t')
+        content=$(buku --noprompt -p -f 2 | awk 'NF == 2 { $0 = $0 "NOTAG" }; { $2 = substr($2,0,80); print $1"\t"$2"\t"$3 }' | column -t -s $'\t')
         menu=$(echo "${content}" | _rofi -p '> ' -filter "${filter}" -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
     elif [[ $mode == "tags" ]]; then
-        menu=$(buku --st | awk '{ print substr($0, index($0,$2)) }' | _rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
+	# strips number in front of buku output and removes number of occourences after the text
+	menu=$(buku --noprompt --st | sed 's/[^ ]* //' | awk -F'(' '{ print $1 }' | awk -F'.' '{ print substr($NF,2,length($NF)) }'  | _rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
     fi
     val=$?
     if [[ $val -eq 1 ]]; then
@@ -65,7 +66,7 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
         if [[ $mode == "bookmarks" ]]; then
             id=$(echo "${menu%% *}")
             for bm in ${id}; do
-                buku -o "${bm}"
+                buku --noprompt -o "${bm}"
             done
         elif [[ $mode == "tags" ]]; then
             filter="${menu}" mode="bookmarks" main
@@ -107,7 +108,7 @@ optionsMenu () {
                     if [[ $newtag == "" ]]; then
                         mode=tags main
                     else
-                        buku -r "${menu}" "${newtag}"
+                        buku --noprompt -r "${menu}" "${newtag}"
                         mode=tags main
                     fi
                 fi
@@ -118,7 +119,7 @@ optionsMenu () {
                     exit
                 elif [[ $val -eq 0 ]]; then
                     if [[ $delask == "1. Yes" ]]; then
-                        buku -r "${menu}"
+                        buku --noprompt -r "${menu}"
                         mode=tags main
                     elif [[ $delask == "2. No" ]]; then
                         mode=tags main
@@ -137,7 +138,7 @@ deleteMenu () {
         exit
     elif [[ $val -eq 0 ]]; then
         if [[ $delask == "1. Yes" ]]; then
-            buku -d ${id}
+            buku --noprompt -d ${id}
             mode=bookmarks main
         elif [[ $delask == "2. No" ]]; then
             optionsMenu
@@ -173,7 +174,7 @@ editTags () {
     if [[ $val -eq 1 ]]; then
         exit
     elif [[ $val -eq 0 ]]; then
-        buku -u ${id} --tag ${edittagsmenu}
+        buku --noprompt -u ${id} --tag ${edittagsmenu}
     fi
     mode=bookmarks main
 }
@@ -185,7 +186,7 @@ editBookmark () {
         exit
     elif [[ $val -eq 0 ]]; then
         if [[ $bmarkmenu == "http"* ]]; then
-            buku -u "${id}" --url "${bookmark}"
+            buku --noprompt -u "${id}" --url "${bookmark}"
         else
             echo "" | rofi -e "Not a valid URI, Make sure URLs start with http"
             editBookmark
@@ -204,7 +205,7 @@ addMark () {
 }
 
 addTags () {
-    inserttags=$(buku --st | awk '{ print $2 }' | _rofi -p '> ' -mesg "Add some tags. Separate tags with ', '")
+    inserttags=$(buku --noprompt --st | awk '{ print $2 }' | _rofi -p '> ' -mesg "Add some tags. Separate tags with ', '")
     val=$?
     if [[ $val -eq 1 ]]; then
         exit
@@ -219,10 +220,11 @@ addTags () {
             tags=${inserttags}
         fi
         if [[ $1 == "--update" ]]; then
-            buku -u "${id}" --tag ${tags}
+            buku --noprompt -u "${id}" --tag ${tags}
         else
-            buku -a ${inserturl} ${tags}
+            buku --noprompt -a ${inserturl} ${tags}
         fi
     fi
+    mode=bookmarks main
 }
 mode=bookmarks main
