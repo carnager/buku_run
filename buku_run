@@ -44,7 +44,6 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
         content=$(buku --noprompt -p -f 2 | awk 'NF == 2 { $0 = $0 "NOTAG" }; { $2 = substr($2,0,80); print $1"\t"$2"\t"$3 }' | column -t -s $'\t')
         menu=$(echo "${content}" | _rofi -p '> ' -filter "${filter}" -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
     elif [[ $mode == "tags" ]]; then
-	# strips number in front of buku output and removes number of occourences after the text
 	menu=$(buku --noprompt --st | sed 's/[^ ]* //' | awk -F'(' '{ print $1 }' | awk -F'.' '{ print substr($NF,2,length($NF)) }'  | _rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
     fi
     val=$?
