@@ -191,6 +191,7 @@ editBookmark () {
             editBookmark
         fi
     fi
+    mode=bookmarks main
 }
 
 addMark () {
