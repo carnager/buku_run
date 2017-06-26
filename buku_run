@@ -185,7 +185,7 @@ editBookmark () {
         exit
     elif [[ $val -eq 0 ]]; then
         if [[ $bmarkmenu == "http"* ]]; then
-            buku -u "${id}" --url "${bookmark}"
+            buku -u "${id}" --url "${bmarkmenu}"
         else
             echo "" | rofi -e "Not a valid URI, Make sure URLs start with http"
             editBookmark
