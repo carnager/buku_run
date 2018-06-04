@@ -12,6 +12,9 @@ edit="Alt+e"
 delete="Alt+d"
 copyurl="Alt+l"
 
+#libnotify messages
+notifysend='true'
+
 # colors
 help_color="#334433"
 
@@ -61,8 +64,11 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
     elif [[ $val -eq 13 ]]; then
         editMenu
     elif [[ $val -eq 15 ]]; then
-        urlcopy=$(echo "${menu}" | awk '{ print $2 }')
-	echo "${urlcopy}" | xclip -selection clipboard
+        url=$(echo "${menu}" | awk '{ print $2 }')
+	echo "${url}" | xclip -selection clipboard
+	if [[ $notifysend == "true" ]] ; then
+	    notify-send "Copied ${url}"
+        fi
     elif [[ $val -eq 11 ]]; then
         if [[ $mode == "bookmarks" ]]; then
             export mode="tags"
@@ -76,6 +82,10 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
             id=$(echo "${menu%% *}")
             for bm in ${id}; do
                 buku -o "${bm}"
+	        if [[ $notifysend == "true" ]] ; then
+		    url=$(echo "${menu}" | awk '{ print $2 }')
+		    notify-send "Opening ${url}"
+		fi
             done
         elif [[ $mode == "tags" ]]; then
             filter="${menu}" mode="bookmarks" main

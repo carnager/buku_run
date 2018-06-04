@@ -12,5 +12,8 @@ edit="Alt+e"
 delete="Alt+d"
 copyurl="Alt+l"
 
+#libnotify messages
+notifysend='true'
+
 # colors
 help_color="#2d7ed8"
