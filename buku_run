@@ -56,7 +56,7 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
     elif [[ $val -eq 10 ]]; then
         addMark
     elif [[ $val -eq 14 ]]; then
-        deleteMark
+        deleteMenu
     elif [[ $val -eq 13 ]]; then
         editMenu
     elif [[ $val -eq 11 ]]; then
@@ -143,7 +143,7 @@ deleteMenu () {
         exit
     elif [[ $val -eq 0 ]]; then
         if [[ $delask == "1. Yes" ]]; then
-            buku -d ${id}
+            buku -d ${id} --tacit
             mode=bookmarks main
         elif [[ $delask == "2. No" ]]; then
             optionsMenu
