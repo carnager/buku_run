@@ -8,6 +8,8 @@ _rofi () {
 switch_view="Alt+Tab"
 new_bookmark="Alt+n"
 actions="Alt+a"
+edit="Alt+e"
+delete="Alt+d"
 
 # colors
 help_color="#334433"
@@ -42,9 +44,9 @@ main () {
 Use <span color='${help_color}'>${switch_view}</span> to switch View. <span color='${help_color}'>${actions}</span> for actions"
     if [[ $mode == "bookmarks" ]]; then
         content=$(buku -p -f 2 | awk 'NF == 2 { $0 = $0 "NOTAG" }; { $2 = substr($2,0,80); print $1"\t"$2"\t"$3,$4,$5 }' | column -t -s $'\t')
-        menu=$(echo "${content}" | _rofi -p '> ' -filter "${filter}" -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
+        menu=$(echo "${content}" | _rofi -p '> ' -filter "${filter}" -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}" -kb-custom-4 "${edit}" -kb-custom-5 "${delete}")
     elif [[ $mode == "tags" ]]; then
-        menu=$(buku --np --st | awk '{$NF=""; print $0}' | cut -d ' ' -f2-  | _rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}")
+        menu=$(buku --np --st | awk '{$NF=""; print $0}' | cut -d ' ' -f2-  | _rofi -p '> ' -mesg "${HELP}" -kb-custom-1 "${new_bookmark}" -kb-custom-2 "${switch_view}" -kb-custom-3 "${actions}" -kb-custom-4 "${edit}" -kb-custom-5 "${delete}")
     fi
     val=$?
     if [[ $val -eq 1 ]]; then
@@ -53,6 +55,10 @@ Use <span color='${help_color}'>${switch_view}</span> to switch View. <span colo
         optionsMenu
     elif [[ $val -eq 10 ]]; then
         addMark
+    elif [[ $val -eq 14 ]]; then
+        deleteMark
+    elif [[ $val -eq 13 ]]; then
+        editMenu
     elif [[ $val -eq 11 ]]; then
         if [[ $mode == "bookmarks" ]]; then
             export mode="tags"
