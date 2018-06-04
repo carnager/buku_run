@@ -149,7 +149,7 @@ editMenu () {
     bookmark=$(echo "${menu}" | awk '{ print $2 }')
     id=$(echo "${menu}" | awk '{ print $1 }')
     tags=$(echo "${menu}" | awk '{ print substr($0, index($0,$3)) }' | sed 's/NOTAG//g')
-    content=$(echo -e "url:  $bookmark\ntags: $tags")
+    content=$(echo -e "1. url:  $bookmark\n2. tags: $tags")
     editmenu=$(echo -e "< Return\n---\n${content}" | _rofi -p '> ')
     val=$?
     if [[ $val -eq 1 ]]; then
