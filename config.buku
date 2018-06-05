@@ -10,6 +10,12 @@ new_bookmark="Alt+n"
 actions="Alt+a"
 edit="Alt+e"
 delete="Alt+d"
+copyurl="Alt+l"
+
+#libnotify messages
+notifysend='true'
+#display oldest bookmarks on top by default
+reverselist='false'
 
 # colors
 help_color="#2d7ed8"
