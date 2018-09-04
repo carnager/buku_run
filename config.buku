@@ -4,6 +4,10 @@ _rofi () {
     rofi -dmenu -i -no-levenshtein-sort -width 1000 "$@"
 }
 
+# display settings
+display_type=1
+max_str_width=80
+
 # keybindings
 switch_view="Alt+Tab"
 new_bookmark="Alt+n"
