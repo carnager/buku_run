@@ -258,19 +258,27 @@ BEGIN {
   FS="\n"
 }
 {
-  if ($3 == "")
-    $3 = " # NOTAG"
+  if (NF == 4)
+    tagline = $4
+  else {
+    tagexists = match($3, /\s+ # /)
+    if (tagexists == 0)
+      tagline = " # NOTAG"
+    else
+      tagline = $3
+    }
   id = gensub(/([0-9]+)\.(.*)/, "\\1", "g", $1)
   url = substr(gensub(/\s+> (.*)/, "\\1", "g", $2),0,max)
-  tags = gensub(/\s+# (.*)/, "\\1", "g", $3)
+  tags = gensub(/\s+# (.*)/, "\\1", "g", tagline)
   title = substr(gensub(/[0-9]+\.\s*(.*)/, "\\1", "g", $1),0,max)
 
   if (type == 1)
     print id "\t" url "\t" tags
-  else
+  else {
     print id "\t" title "\t" tags
     if (type == 3)
       print " \t" url "\t "
+    }
   print ""
 }
 ' | column -t -s $'\t')"
