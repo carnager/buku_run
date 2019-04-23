@@ -258,11 +258,12 @@ BEGIN {
   FS="\n"
 }
 {
-  if ($3 == "")
-    $3 = " # NOTAG"
+  tag = $NF
+  if (substr(tag, 0, 4) != "   #")
+    tag = " # NOTAG"
   id = gensub(/([0-9]+)\.(.*)/, "\\1", "g", $1)
   url = substr(gensub(/\s+> (.*)/, "\\1", "g", $2),0,max)
-  tags = gensub(/\s+# (.*)/, "\\1", "g", $3)
+  tags = gensub(/\s+# (.*)/, "\\1", "g", tag)
   title = substr(gensub(/[0-9]+\.\s*(.*)/, "\\1", "g", $1),0,max)
 
   if (type == 1)
@@ -324,7 +325,10 @@ getTagsFromId () {
     FS="\n"
   }
   {
-    print gensub(/\s+# (.*)/, "\\1", "g", $3)
+    tag = $NF
+    if (substr(tag, 0, 4) != "   #")
+      tag = "# "
+    print gensub(/\s+# (.*)/, "\\1", "g", tag)
   }
   ')"
 }
